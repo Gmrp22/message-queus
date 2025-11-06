@@ -4,10 +4,10 @@ const WebSocket = require('ws');
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server, path: '/ws' });
-
-const PORT = 3000;
+const cors = require('cors');
+const PORT = 8000;
 app.use(express.json());
-
+app.use(cors({ origin: "http://localhost:3000" }));
 server.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
 });
@@ -26,6 +26,7 @@ wss.on('connection', (ws) => {
   console.log('Client connected via WebSocket');
 
   ws.on('message', (message) => {
+    console.log('Received:', message);
     const parsed = JSON.parse(message);
     parsed.id = messages.length + 1;
     messages.push(parsed);
